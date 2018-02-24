@@ -1,7 +1,7 @@
 hw01-Minjeong-Jeong
 ================
 Minjeong Jeong
-2018년 2월 20일
+2018, 2, 20
 
 ``` r
 library(corrplot)

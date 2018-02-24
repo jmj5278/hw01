@@ -1,7 +1,7 @@
 ---
 title: "hw01-Minjeong-Jeong"
 author: "Minjeong Jeong"
-date: "2018³â 2¿ù 20ÀÏ"
+date:   "2018, 2,  20"
 output: github_document
 ---
 
