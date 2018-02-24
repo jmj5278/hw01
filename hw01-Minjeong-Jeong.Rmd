@@ -1,0 +1,319 @@
+---
+title: "hw01-Minjeong-Jeong"
+author: "Minjeong Jeong"
+date: "2018³â 2¿ù 20ÀÏ"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(corrplot)
+library(MASS)
+```
+
+# 2.Data import
+
+```{r}
+column_names <- c('symboling',
+                  'normalized_losses',
+                  'make',
+                  'fuel_type',
+                  'aspiration',
+                  'num_of_doors',
+                  'body_style',
+                  'drive_wheels',
+                  'engine_location',
+                  'wheel_base',
+                  'length',
+                  'width',
+                  'height',
+                  'curb_weight',
+                  'engine_type',
+                  'num_of_cylinders',
+                  'engine_size',
+                  'fuel_system',
+                  'bore',
+                  'stroke',
+                  'compression_ratio',
+                  'horsepower',
+                  'peak_rpm',
+                  'city_mpg',
+                  'highway_mpg',
+                  'price'
+                  )
+
+```
+
+```{r}
+#importing using read.csv
+dat<- read.csv('imports-85.data',
+                  col.names=column_names,na.strings='?',header=TRUE,
+                  colClasses= c(symboling='real',
+                  normalized_losses="real",
+                  make="character",
+                  fuel_type="character",
+                  aspiration="character",
+                  num_of_doors="character",
+                  body_style="character",
+                  drive_wheels="character",
+                  engine_location="character",
+                  wheel_base='real',
+                  length='real',
+                  width='real',
+                  height='real',
+                  curb_weight='integer',
+                  engine_type="character",
+                  num_of_cylinders="character",
+                  engine_size='integer',
+                  fuel_system="character",
+                  bore="real",
+                  stroke="real",
+                  compression_ratio='real',
+                  horsepower='integer',
+                  peak_rpm='integer',
+                  city_mpg='integer',
+                  highway_mpg='integer',
+                  price='integer'))
+str(dat)
+```
+
+                 
+```{r}
+#importing using read_csv
+library(readr)
+dat1 <- read_csv('imports-85.data',col_names =column_names,na='?',
+                  col_types = list(symboling=col_double(),
+                  normalized_losses=col_double(),
+                  make=col_character(),
+                  fuel_type=col_character(),
+                  aspiration=col_character(),
+                  num_of_doors=col_character(),
+                  body_style=col_character(),
+                  drive_wheels=col_character(),
+                  engine_location=col_character(),
+                  wheel_base=col_double(),
+                  length=col_double(),
+                  width=col_double(),
+                  height=col_double(),
+                  curb_weight=col_integer(),
+                  engine_type=col_character(),
+                  num_of_cylinders=col_character(),
+                  engine_size=col_integer(),
+                  fuel_system=col_character(),
+                  bore=col_double(),
+                  stroke=col_double(),
+                  compression_ratio=col_double(),
+                  horsepower=col_integer(),
+                  peak_rpm=col_integer(),
+                  city_mpg=col_integer(),
+                  highway_mpg=col_integer(),
+                  price=col_integer()
+                  ))
+str(dat1)              
+```
+
+
+# 3.Technical Questions about importing data (10 pts)
+Answer the following questions (using your own words). You do NOT need to include any
+commands. 
+
+**a. If you don¡¯t provide a vector of column names, what happens to the column names of
+the imported data when you simply invoke read.csv('imports-85.data')?**  
+
+> The column names of the imported data would be the first row of observation.In this case, it shows like x3, x, alfa.romero., gas., std.... so on   
+
+**b. If you don¡¯t provide a vector of column names, what happens to the column names of the
+imported data when you invoke read.csv('imports-85.data', header = FALSE)?**  
+
+>The column names that used to be stored will replace to v1,v2...v# which are variable numbers.
+
+**c. When using the reading table functions, if you don¡¯t specify how missing values are
+codified, what happens to the data type of those columns that contain '?', e.g. price
+or num_of_doors?** 
+
+> If we don't specify the missing values like ?, the columns that contain ? would be treated as stings(chracter). So it will keep giving errors when you specify the data type.   
+
+**d. Say you import imports-85.data in two different ways. In the first option you import
+the data without specifying the data type of each column. In the second option you do
+specify the data types. You may wonder whether both options return a data frame of
+the same memory size. You can actually use the function object.size() that provides
+an estimate of the memory that is being used to store an R object. Why is the data
+frame imported in the second option bigger (in terms of bytes) than the data frame
+imported in the first option?  **
+
+> It is because specifying the data type of each column requires more space in the data frame 
+
+**e. Say the object dat is the data frame produced when importing imports-85.data.
+What happens to the data values if you convert dat as an R matrix?**
+
+>Since some column has the missing values which are not codified, the result of converting dat as an R matrix would be that whole columns are treated as string. 
+
+# 4. Practice base plotting (10 pts)
+```{r Histogram}
+#histogram of price with colored bars
+hist(dat$price, las = 1, col = c('red','gray','pink','black','yellow'), xlab = 'price',
+main = "Histogram of Price")
+```
+
+```{r boxplot}
+#boxplot of horsepower in horizontal orientation.
+boxplot(dat$horsepower,data= dat , horizontal=TRUE,	xlab="horsepower", main ="HORSEPOWER", col="blue")
+```
+
+
+```{r barplot}
+body=dat$body_style
+body.freq=sort(table(body), decreasing=TRUE)
+#barplot of the frequencies of body_style, arranged in decreasing order.
+barplot(body.freq,col="green")
+```
+
+```{r starsplot}
+#stars() plot of vehicles with turbo aspiration, using only variables wheel-base,length, width, height, and price
+stars(dat[dat$aspiration == 'turbo',][,c("wheel_base","length","width","height","price")],len=0.8,key.loc=c(10,2), main = "Turbo aspiration")
+```
+
+
+# 5.Summaries (10 pts)
+```{r summaries a}
+#a. What is the mean price of fuel_type gas cars? And what is the mean price of fuel_type diesel cars? (removing missing values)
+mean(dat$price[dat$fuel_type == "gas"],na.rm=TRUE)
+mean(dat$price[dat$fuel_type == "diesel"], na.rm=TRUE)
+```
+```{r summaries b}
+#b. What is the make of the car with twelve num_of_cylinders?
+dat$make[dat$num_of_cylinders == "twelve"]
+```
+```{r summaries c}
+#c. What is the make that has the most diesel cars?
+fac_make_fuel<-as.factor(dat$make[dat$fuel_type=='diesel'])
+which.max(summary(fac_make_fuel))
+```
+```{r summaries d}
+#d. What is the price of the car with the largest amount of horsepower?
+max(dat$price[which.max(dat$horsepower)],na.rm=TRUE)
+```
+**As you can see the result, the price with the largest amount of hoursepower is the missing value**
+
+```{r summaries e}
+#e. What is the bottom 10th percentile of city_mpg?
+quantile(dat$city_mpg, 0.1, na.rm=TRUE)
+```
+```{r summaries f}
+#f. What is the top 10th percentile of highway_mpg?
+n<-10
+quantile(dat$highway_mpg, probs=(1-n/100))
+quantile(dat$highway_mpg,c(0.9))
+```
+```{r summaries g}
+#g. What is the median price of those cars in the bottom 10th percentile of city_mpg?
+median(dat$price[dat$city_mpg<=quantile(dat$city_mpg, c(0.1), na.rm=TRUE)], na.rm=TRUE)
+```
+
+
+# 6.Technical Questions about data frames (10 pts)
+**a. What happens when you use the dollar $ operator on a data frame, attempting to use
+the name of a column that does not exist? For example: dat$xyz where there is no
+column named xyz.**
+
+>If we use the name of a column that doesn't exist, it show NULL which returned by expressions and functions whose values are undefined.
+
+**b. Which of the following commands fails to return the vector mpg which is a column in
+the built-in data frame mtcars**
+
+1. mtcars$mpg  
+2. mtcars[ ,1]  
+3. mtcars[[1]]  
+4. mtcars[ ,mpg]  
+5. mtcars[["mpg"]]  
+6. mtcars$"mpg"  
+7. mtcars[ ,"mpg"] 
+
+> 4th commands fails to return. 
+(1):name of column with dollar sign
+(2):column index
+(3):single column index (**integer** or name)
+(5):single column index (integer or **name**)
+(6):equivalently name of column with dollar sign 
+(7):column names
+
+**c. Based on your answer for part (b), what is the reason that makes such command to
+fail?**
+
+>It is because we need to type the column name with "". So the 4th should be mtcars[ ,"mpg"].
+
+**d.Can you include an R list as a ¡°column¡± of a data frame? YES or NO, and why**
+
+>Yes, it is because R data frames are special kinds of lists and its attribute allows to add the different type of columns  
+
+**e. What happens when you apply as.list() to a data frame? e.g. as.list(mtcars)**
+
+>*It lists all oberservations of each variable respectively. It shows the data frame as lists.
+
+**f. Consider the command: abc <- as.list(mtcars). What function(s) can you use to convert the object abc into a data frame?**
+
+> We can use data frame function => **data.frame()** 
+
+#7 Correlations of quantitative variables
+```{r}
+qdat <- na.omit(dat[,c(10:14, 17, 19:26)])
+
+M = cor(qdat)
+head(round(M,2))
+
+# 1st correlogram
+corrplot(M,method="ellipse")
+# 2nd correlogram:Full correlation matrix with a mixed visualization style using "corrplot.mixed()"
+corrplot.mixed(M, lower="number",upper="shade",lower.col="black",number.cex = 0.8)
+```
+
+####**Based on the matrix of correlations between the quantitative variables,comment on the patterns and values that you observe.**
+
+>The values related to peak_rpm, city_mpg, highway_mpg are mostly negative. Most of correlations between the quantitative variables have the postive correlation as we can see through the colors and the shape of correlogram. In terms of the price, as length, width, height, engine size, and compression ratio are increasing, the price of cars also increase. On the other hand, the price tend to decrase when rpm and mpg increase. 
+
+
+# 8. Principal Components Analysis (20 pts)
+```{r}
+#8.1 Use prcomp() to perform a principal components analysis on qdat; use the argument scale. = TRUE to carry out PCA on standardized data.
+
+qdat_prcomp<-prcomp(qdat, scale=TRUE)
+names(qdat_prcomp)
+```
+```{r}
+#Examine the eigenvalues and determine the proportion of variation that is ¡°captured¡± by the first three components.
+eigenvalues_prcomp <-qdat_prcomp$sdev^2
+sumeig_prcomp<-sum(eigenvalues_prcomp)
+percentage_prcomp<-eigenvalues_prcomp/sumeig_prcomp
+cumu_percent_prcomp<-cumsum(percentage_prcomp)
+eigdat_prcomp<-data.frame('eigenvalues_prcomp'=eigenvalues_prcomp, 'percentage_prcomp'=percentage_prcomp, 'cumu_percent_prcomp'=cumu_percent_prcomp)
+head(eigdat_prcomp,3)
+
+```
+
+
+```{r}
+#8.2 Use the first two components to graph a scatterplot of the vehicles 
+qdat_score<-round(qdat_prcomp$x,3)
+col<-c('pink','yellow')
+dfqdat_sc<-data.frame(qdat_score)
+plot(dfqdat_sc$PC1,dfqdat_sc$PC2, main='The first 2 Components of vehicles',col=col,xlab='PC1',ylab='PC2',pch=19, cex=1.5)
+
+#Use the first two loadings (i.e. eigenvectors) to graph the variables.
+qdat_load<-qdat_prcomp$rotation
+dfqdat_ld<-data.frame(qdat_load)
+plot(dfqdat_ld$PC1,dfqdat_ld$PC2,xlab='PC1',ylab='PC2', pch=19, cex=1.5)
+
+# Optionally, you can call biplot() of the "prcomop" object to get a simultaneous plot of both the vehicles and the variables.
+biplot(qdat_prcomp, scale = 0)
+```
+
+**Based on the previous plots, provide a concise description of the patterns that you
+observe.**
+
+>Positively correlated variables are gathered together. And highway_mpg, city_mpg, and peak_rpm are positioned on opposite sides of the plot origin. In this graph, the compression_ratio is the one that is away from the origin. It represents compression_ratio are well represnted on the factor map.
+Also, the plot of the vehicles by using two components are gathered mostly over zero. 
+
+
