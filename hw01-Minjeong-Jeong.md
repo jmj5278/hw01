@@ -243,13 +243,13 @@ Answer the following questions (using your own words). You do NOT need to includ
 
 > If we don't specify the missing values like ?, the columns that contain ? would be treated as stings(chracter). So it will keep giving errors when you specify the data type.
 
-**d. Say you import imports-85.data in two different ways. In the first option you import the data without specifying the data type of each column. In the second option you do specify the data types. You may wonder whether both options return a data frame of the same memory size. You can actually use the function object.size() that provides an estimate of the memory that is being used to store an R object. Why is the data frame imported in the second option bigger (in terms of bytes) than the data frame imported in the first option? **
+**d. Say you import imports-85.data in two different ways. In the first option you import the data without specifying the data type of each column. In the second option you dospecify the data types. You may wonder whether both options return a data frame ofthe same memory size. You can actually use the function object.size() that provides an estimate of the memory that is being used to store an R object. Why is the data frame imported in the second option bigger (in terms of bytes) than the data frameimported in the first option? **
 
-> It is because specifying the data type of each column requires more space in the data frame
+> It is because specifying the data type of each column requires more spaces to put information in the data frame. In this case, the file size of the table is 37664 bytes without specifying and the file size of the table is 42528 bytes with specifying
 
 **e. Say the object dat is the data frame produced when importing imports-85.data. What happens to the data values if you convert dat as an R matrix?**
 
-> Since some column has the missing values which are not codified, the result of converting dat as an R matrix would be that whole columns are treated as string.
+> Since some column have the missing values which are not codified, the result of converting dat as an R matrix would be that the characters in the original data frame become missing values in the matrix
 
 4. Practice base plotting (10 pts)
 ==================================
@@ -327,7 +327,7 @@ max(dat$price[which.max(dat$horsepower)],na.rm=TRUE)
 
     ## [1] -Inf
 
-**As you can see the result, the price with the largest amount of hoursepower is the missing value**
+**As you can see the result, the price with the largest amount of hoursepower is the missing value. (Note.the minimum and maximum of a numeric empty set are +Inf and -Inf)**
 
 ``` r
 #e. What is the bottom 10th percentile of city_mpg?
@@ -377,7 +377,7 @@ median(dat$price[dat$city_mpg<=quantile(dat$city_mpg, c(0.1), na.rm=TRUE)], na.r
 6.  mtcars$"mpg"
 7.  mtcars\[ ,"mpg"\]
 
-> 4th commands fails to return. (1):name of column with dollar sign (2):column index (3):single column index (**integer** or name) (5):single column index (integer or **name**) (6):equivalently name of column with dollar sign (7):column names
+> The 4th command fails to return. (1):name of column with dollar sign (2):column index (3):single column index (**integer** or name) (5):single column index (integer or **name**) (6):equivalently name of column with dollar sign (7):column names
 
 **c. Based on your answer for part (b), what is the reason that makes such command to fail?**
 
@@ -441,12 +441,12 @@ corrplot.mixed(M, lower="number",upper="shade",lower.col="black",number.cex = 0.
 
 ![](hw01-Minjeong-Jeong_files/figure-markdown_github/unnamed-chunk-5-2.png)
 
-#### **Based on the matrix of correlations between the quantitative variables,comment on the patterns and values that you observe.**
+**Based on the matrix of correlations between the quantitative variables,comment on the patterns and values that you observe.**
 
 > The values related to peak\_rpm, city\_mpg, highway\_mpg are mostly negative. Most of correlations between the quantitative variables have the postive correlation as we can see through the colors and the shape of correlogram. In terms of the price, as length, width, height, engine size, and compression ratio are increasing, the price of cars also increase. On the other hand, the price tend to decrase when rpm and mpg increase.
 
-8. Principal Components Analysis (20 pts)
-=========================================
+8. Principal Components Analysis
+================================
 
 ``` r
 #8.1 Use prcomp() to perform a principal components analysis on qdat; use the argument scale. = TRUE to carry out PCA on standardized data.
