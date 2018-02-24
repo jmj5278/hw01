@@ -117,15 +117,21 @@
 
 7. Missing Attribute Values: Missing values are denoted as "?"
    
-   Attribute #: |  Number of instances missing a value:
+   (Attribute #: |  Number of instances missing a value:)
    -----------    --------------------------------------
-   #2           |  41
-   #6           |  2
-   #19          |  4
-   #20          |  4
-   #22          |  2
-   #23          |  2
-   #26          |  4
+   (#2           |  41)
+   
+   (#6           |  2)
+   
+   (#19          |  4)
+   
+   (#20          |  4)
+   
+   (#22          |  2)
+   
+   (#23          |  2)
+   
+   (#26          |  4)
 
 
 
